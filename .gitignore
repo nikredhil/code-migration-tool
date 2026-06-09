@@ -1,0 +1,19 @@
+.env
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# generated data + converted artifacts
+code_migration/data/raw/
+code_migration/data/sample/
+converted/
+*.parquet
+
+# spark / mlflow local
+metastore_db/
+derby.log
+spark-warehouse/
+mlruns/

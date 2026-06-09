@@ -1,0 +1,20 @@
+# Code-migration tool — detect / convert / dual-run validate / PR.
+
+# Conversion providers (optional; rule provider needs none of these)
+anthropic>=0.69.0          # provider=anthropic (Claude API)
+# provider=databricks uses databricks-sdk (below) — no extra dep
+
+# Data + reference engine
+pandas>=2.0.0
+pyarrow>=14.0.0
+duckdb>=0.10.0             # independent reference engine for SQL / dbt
+jinja2>=3.1.0             # render dbt models
+
+# Databricks execution (candidate run) + serving (hosted Claude) + MLflow auth
+databricks-sdk>=0.30.0
+mlflow-skinny>=2.14.0     # run logging + tracing to the workspace
+
+python-dotenv>=1.0.0
+
+# Local Spark dry-run only (needs Java; do NOT install alongside databricks-connect)
+# pyspark>=3.5.0

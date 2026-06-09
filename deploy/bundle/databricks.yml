@@ -1,0 +1,38 @@
+# Databricks Asset Bundle — deploys the code-migration job onto infra provisioned
+# by the lakebase accelerator (Terraform). Loose coupling: this bundle lives with
+# the tool; the accelerator deploys it and injects the cluster id.
+#
+# Validate:  databricks bundle validate -t dev
+# Deploy:    databricks bundle deploy   -t dev
+# Run:       databricks bundle run migration_pipeline -t dev
+# Destroy:   databricks bundle destroy  -t dev
+
+bundle:
+  name: code-migration-tool
+
+variables:
+  existing_cluster_id:
+    description: Cluster id from the accelerator's `terraform output cluster_id`.
+    default: ""
+
+targets:
+  dev:
+    mode: development
+    default: true
+    workspace:
+      host: ${DATABRICKS_HOST}
+
+resources:
+  jobs:
+    migration_pipeline:
+      name: "[code-migration] pipeline"
+      tags:
+        project: code-migration-tool
+        usecase: code_migration
+      tasks:
+        - task_key: run_migration
+          existing_cluster_id: ${var.existing_cluster_id}
+          spark_python_task:
+            # path is relative to this bundle file (deploy/bundle/)
+            python_file: ../../code_migration/run.py
+            parameters: ["--example", "all", "--backend", "databricks", "--provider", "rule"]
